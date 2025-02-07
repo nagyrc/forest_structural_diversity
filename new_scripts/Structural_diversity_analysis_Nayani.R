@@ -180,10 +180,18 @@ normalized<-function(y) {
 }
 
 #Normalize lidar metrics
-sp_tr3 = data.frame(apply(sp_tr_numeric,2,normalized))
+
+lidar_only = sp_tr[,c(9:23)]
+
+cor_lidar = cor(lidar_only)
+
+lidar_filtered = lidar_only[,-c(2,6,9,12,13)] #removed highly corlinear variables
 
 
-sp_tr3_ldr = cbind(sp_tr$cover_exotic,sp_tr3[,5:18])
+sp_tr3 = data.frame(apply(lidar_filtered,2,normalized))
+
+
+sp_tr3_ldr = cbind(sp_tr$cover_exotic,sp_tr3)
 colnames(sp_tr3_ldr)[1] = "cover_exortic"
 
 sp_tr3_insitu = cbind(sp_tr$cover_exotic,sp_tr[,c(28:53,56,57,60:63)])
@@ -231,7 +239,7 @@ ordiplot (PCA_lidar$x, display = 'sites', type = 'n', main = "plot diversity - l
 points (PCA_lidar$x, pch = sitetype, col = sitetype)
 
 ## the most easy method (if your Group0 isn't alphabetical order, this method can't be used.)
-legend(x="left", legend=levels(as.factor (sp_tr$site)), col=1:30, pch=1:30, pt.cex = 0.5)
+legend(x="left", legend=levels(as.factor (sp_tr$site)), col=1:27, pch=1:27, pt.cex = 0.5)
 #  you can use seq.int(levels(MyMeta$Group)) instead of 1:7
 
 
